@@ -56,14 +56,80 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Hide navbar when scrolling down, show when scrolling up
-    if (scrollTop > lastScrollTop && scrollTop > 300) {
-      navbar.style.top = "-100px";
-    } else {
-      navbar.style.top = "0";
-    }
+    // if (scrollTop > lastScrollTop && scrollTop > 300) {
+    //   navbar.style.top = "-100px";
+    // } else {
+    //   navbar.style.top = "0";
+    // }
 
     lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For mobile or negative scrolling
   });
+
+  function validateForm() {
+    let isValid = true;
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const phoneInput = document.getElementById("phone");
+
+    // Clear previous error messages
+    document.getElementById("nameError").textContent = "";
+    document.getElementById("emailError").textContent = "";
+    document.getElementById("phoneError").textContent = "";
+
+    // Remove previous error highlighting
+    nameInput.style.borderColor = "#e0e0e0";
+    emailInput.style.borderColor = "#e0e0e0";
+    phoneInput.style.borderColor = "#e0e0e0";
+
+    // Validate name (minimum 3 characters)
+    if (nameInput.value.trim() === "" || nameInput.value.length < 3) {
+      document.getElementById("nameError").textContent =
+        "Please enter a valid name (at least 3 characters)";
+      nameInput.style.borderColor = "#e74c3c";
+      isValid = false;
+    }
+
+    // Validate email
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(emailInput.value)) {
+      document.getElementById("emailError").textContent =
+        "Please enter a valid email address";
+      emailInput.style.borderColor = "#e74c3c";
+      isValid = false;
+    }
+
+    // Validate phone (Indian format, allowing multiple formats)
+    const phonePattern = /^(\+91[\-\s]?)?[0]?(91)?[6789]\d{9}$/;
+    if (!phonePattern.test(phoneInput.value)) {
+      document.getElementById("phoneError").textContent =
+        "Please enter a valid Indian phone number";
+      phoneInput.style.borderColor = "#e74c3c";
+      isValid = false;
+    }
+
+    if (isValid) {
+      // Show success message
+      const submitBtn = document.querySelector(".submit-btn");
+      const originalContent = submitBtn.innerHTML;
+
+      submitBtn.innerHTML = '<i class="fas fa-check"></i> Message Sent!';
+      submitBtn.style.backgroundColor = "#27ae60";
+
+      setTimeout(() => {
+        // Reset the form
+        document.getElementById("contactForm").reset();
+
+        // Reset the button
+        submitBtn.innerHTML = originalContent;
+        submitBtn.style.backgroundColor = "#3498db";
+      }, 2000);
+
+      // Here you would typically submit the form data to your backend
+      // Using AJAX or fetch API
+    }
+
+    return false; // Always return false to prevent actual form submission
+  }
 
   // Animate on scroll
   const animateOnScroll = function () {
